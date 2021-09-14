@@ -1,0 +1,333 @@
+  
+float distanceX;
+float distanceY;
+float distanceZ;
+long distance=35;
+int distance1=20;
+/*long x;
+long y;
+long z;*/
+int speed1=10; //enable1  
+int speed2=11; //enalble2
+int in2=2;     //motor
+int in3=3;     //motor
+int in4=4;     //motor
+int in5=5;     //motor
+int in6=6;     //led
+int in7=7;     //sensor-x
+int in8=8;     //sensor-y
+int in9=9;     //sensor-z
+int in12=12; 
+int in13=13;
+int e;
+int LED=0;
+int sensor;
+int frontSensor;
+char D;
+int read1;
+int read2;
+int flame ;
+
+void setup() {
+  
+  Serial.begin(9600);
+   pinMode(in2,OUTPUT); 
+   pinMode(in3,OUTPUT);
+   pinMode(in4,OUTPUT);
+   pinMode(in5,OUTPUT);
+   pinMode(in6,OUTPUT);
+   pinMode(in7,OUTPUT);
+   pinMode(in8,OUTPUT);
+   pinMode(in9,OUTPUT);
+   pinMode(in12,INPUT);
+   pinMode(in13,INPUT);
+   pinMode(speed1,OUTPUT);
+   pinMode(speed2,OUTPUT);
+    
+}
+
+void loop() {
+  
+
+   
+   
+  if (Serial.available()){
+
+     D=Serial.read();}
+    
+    
+  /*forward*/
+    if (D=='f'){
+      forward1();
+    if(distance_y()<=distance1){
+      backward1();
+      delay(500);
+      Stop();}}
+    
+    
+    
+    
+
+
+    
+    /*right*/
+   if (D=='r'){right1();} 
+    /*left*/
+    
+  if (D=='l'){left1();
+  
+         
+    } 
+    /*backward*/
+  if (D=='b'){backward1();
+
+    }
+
+    //stop//
+    if (D=='s'){ Stop();}
+
+    
+     
+
+ 
+    if ( LED==0 && D==1){
+    digitalWrite(in6,1);
+    D=0;
+    LED=1;}
+    
+    if ( LED==1 && D==1){
+    digitalWrite(in6,0);
+    D=0;
+    LED=0;}
+
+    
+    
+    if ( D=='k'){
+
+
+   if(distance_x()<=distance && distance_y()<=distance1 && distance_z()<=distance){
+     right();
+        delay(600);                     }
+                             
+  
+   else if(distance_x()<=distance && distance_y()<=distance1 && distance_z()>distance){
+     right();
+         delay(600);                    }
+                             
+
+   else if( distance_x()>distance && distance_y()<=distance1 && distance_z()<=distance  ){
+     left ();
+          delay(600);                   }
+                             
+                             
+
+    else if(distance_x()>distance && distance_y()<=distance1 && distance_z()>distance){
+     right();
+           delay(600);                  }
+                             
+
+
+   else if( distance_x()<=distance && distance_y()>distance1 && distance_z()>distance ){
+    right();
+    delay(80);
+    forward();
+                             }  
+                            
+
+                                                    
+    else if ( distance_x()>distance && distance_y()>distance1 && distance_z()<=distance ){
+    left();
+    delay(80);
+    forward();
+     
+   }
+
+
+
+
+  else {forward();}
+                             delay(50);
+   
+  
+             }
+           
+
+   if( D=='h'  ){
+    
+   
+  read1=digitalRead(12);
+  read2=digitalRead(13);
+  
+  if(read1==1 && read2== 1)
+  {
+   forward();
+   delay(50);
+   Stop();
+    }
+    
+  if(read1==1 && read2== 0)
+  {
+   right();
+    }
+  if(read1==0 && read2== 1)
+  { 
+  left();
+   }
+     if(read1==0 && read2== 0)
+  {
+    forward();
+    delay(100);
+    Stop();
+  }
+
+  
+  
+  }
+    
+
+  flame=analogRead(A3);
+  if
+  (flame<=255){
+    Stop();
+    digitalWrite(in6,1);
+    tone(in6,500,100);
+    delay(250);
+  }
+  else {digitalWrite(in6,0);}
+
+
+
+    
+}
+    void forward(){
+      //if(e<255){e=e+5;}      
+    analogWrite(speed1,90);
+    analogWrite(speed2,90);
+    digitalWrite(in2,1);    
+    digitalWrite(in3,0);    
+    digitalWrite(in4,1);    
+    digitalWrite(in5,0);
+    digitalWrite(in6,0); 
+    }
+    
+    void backward(){
+    //if(e<255){e=e+5;}      
+    analogWrite(speed1,90);
+    analogWrite(speed2,90);
+    digitalWrite(in2,0);    
+    digitalWrite(in3,1);    
+    digitalWrite(in4,0);    
+    digitalWrite(in5,1);
+    digitalWrite(in6,0);  
+    }
+
+    
+    void right(){
+    analogWrite(speed1,150);
+    analogWrite(speed2,150);
+    digitalWrite(in2,0);    
+    digitalWrite(in3,1);    
+    digitalWrite(in4,1);    
+    digitalWrite(in5,0);      
+    digitalWrite(in6,0);}
+
+    
+    void left(){
+    analogWrite(speed1,150);
+    analogWrite(speed2,150);
+    digitalWrite(in2,1);    
+    digitalWrite(in3,0);    
+    digitalWrite(in4,0);    
+    digitalWrite(in5,1);
+    digitalWrite(in6,0);}
+
+    
+    void Stop(){
+    digitalWrite(in2,0);    
+    digitalWrite(in3,0);    
+    digitalWrite(in4,0);    
+    digitalWrite(in5,0); 
+    analogWrite(speed1,0); 
+    analogWrite(speed2,0);
+    }    
+
+    
+    void forward1(){
+      //if(e<255){e=e+5;}      
+    analogWrite(speed1,255);
+    analogWrite(speed2,255);
+    digitalWrite(in2,1);    
+    digitalWrite(in3,0);    
+    digitalWrite(in4,1);    
+    digitalWrite(in5,0);
+   // digitalWrite(in6,0); 
+    }
+    
+    void backward1(){
+    //if(e<255){e=e+5;}      
+    analogWrite(speed1,255);
+    analogWrite(speed2,255);
+    digitalWrite(in2,0);    
+    digitalWrite(in3,1);    
+    digitalWrite(in4,0);    
+    digitalWrite(in5,1);
+    digitalWrite(in6,0);  
+    }
+
+    
+    void right1(){
+    analogWrite(speed1,255);
+    analogWrite(speed2,255);
+    digitalWrite(in2,0);    
+    digitalWrite(in3,1);    
+    digitalWrite(in4,1);    
+    digitalWrite(in5,0);      
+    digitalWrite(in6,0);}
+
+    
+    void left1(){
+    analogWrite(speed1,255);
+    analogWrite(speed2,255);
+    digitalWrite(in2,1);    
+    digitalWrite(in3,0);    
+    digitalWrite(in4,0);    
+    digitalWrite(in5,1);
+    digitalWrite(in6,0);}
+    long distance_x(){
+long  x;      
+   digitalWrite(in7, LOW); 
+   delayMicroseconds(10);
+   digitalWrite(in7, HIGH);
+   delayMicroseconds(2);
+   digitalWrite(A0, HIGH);
+   x=pulseIn(A0,HIGH);
+   return((x/2)/28.5);
+
+      }
+    
+    long distance_y(){
+   long  y;   
+   digitalWrite(in8, LOW);
+   delayMicroseconds(10);
+   digitalWrite(in8, HIGH);
+   delayMicroseconds(2);
+   digitalWrite(A1, HIGH);
+   y=pulseIn(A1,HIGH);
+   return((y/2)/28.5);
+
+      }
+    
+    long distance_z(){
+      
+  long  z;    
+   digitalWrite(in9, LOW);
+   delayMicroseconds(10);
+   digitalWrite(in9, HIGH);
+   delayMicroseconds(2);
+   digitalWrite(A2, HIGH);
+   z=pulseIn(A2,HIGH);
+   return((z/2)/28.5);
+   
+      } 
+
+    
